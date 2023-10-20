@@ -1,0 +1,36 @@
+logging:
+  level:
+    ROOT: INFO
+server:
+  port: ${APP_PORT}
+spring:
+  datasource:
+    url: "jdbc:postgresql://${PGHOST}:${PGPORT}/${PGCTL}?reWriteBatchedInserts=true"
+    username: "${PGUSR}"
+    password: "${PGPWD}"
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 40
+      idle-timeout: 60000
+      pool-name: "sociame-api-db-connection-pool"
+      auto-commit: false
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        id:
+          sequence:
+            increment_size_mismatch_strategy: EXCEPTION
+        connection:
+          provider_disables_autocommit: true
+        generate_statistics: false
+        order_inserts: true
+        order_updates: true
+        query:
+          in_clause_parameter_padding: true
+          plan_cache_max_size: 4096
+          fail_on_pagination_over_collection_fetch: true
+        jdbc:
+          batch_size: 50
