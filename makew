@@ -1,0 +1,12 @@
+#!/bin/bash
+
+options=$1
+
+if [ -z "$1" ]
+  then
+    options="run"
+fi
+
+source .env
+
+make "$options"
