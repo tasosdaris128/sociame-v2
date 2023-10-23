@@ -1,18 +1,16 @@
 package com.sociame.app;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+@Slf4j
 @SpringBootApplication
 public class Application {
 
-	private final static Logger logger = LoggerFactory.getLogger(Application.class);
-
 	public static void main(String[] args) {
-		logger.info("Starting application...");
+		log.info("Starting application...");
 
 		var app = SpringApplication.run(Application.class, args);
 
@@ -29,7 +27,7 @@ public class Application {
 
 		@Override
 		public void run() {
-			logger.info("Gracefully shutting down server. Goodbye!");
+			log.info("Gracefully shutting down server. Goodbye!");
 			context.stop();
 		}
 
