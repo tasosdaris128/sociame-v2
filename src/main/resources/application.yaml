@@ -34,3 +34,9 @@ spring:
           fail_on_pagination_over_collection_fetch: true
         jdbc:
           batch_size: 50
+  mail:
+    from: "${MAIL_FROM}"
+    host: "${MAIL_HOST}"
+    port: "${MAIL_PORT}"
+    username: "${MAIL_USERNAME}"
+    password: "${MAIL_PASSWORD}"
