@@ -3,6 +3,36 @@ logging:
     ROOT: INFO
 server:
   port: ${APP_PORT}
+mail:
+  from: "${MAIL_FROM}"
+  host: "${MAIL_HOST}"
+  port: "${MAIL_PORT}"
+  username: "${MAIL_USERNAME}"
+  password: "${MAIL_PASSWORD}"
+cors:
+  url: "${APP_URL:http://localhost:${server.port}}"
+  pattern: "${APP_CORS_ORIGIN_PATTERN:http://localhost:${server.port}}"
+management:
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "info,health"
+      security:
+        enabled: true
+        username: "${ACTUATOR_USERNAME}"
+        password: "${ACTUATOR_PASSWORD}"
+options:
+  jwt-settings:
+    issuer: "tasos.daris"
+    expirationInMinutes: "${JWT_EXPIRATION_IN_MINUTES:300}"
+    secret: "${JWT_SECRET:sdfklgjndfk938475jkdfghw9345jkdfg}"
+  db:
+    secret: "${DB_SALT}"
 spring:
   datasource:
     url: "jdbc:postgresql://${PGHOST}:${PGPORT}/${PGCTL}?reWriteBatchedInserts=true"
@@ -34,9 +64,3 @@ spring:
           fail_on_pagination_over_collection_fetch: true
         jdbc:
           batch_size: 50
-  mail:
-    from: "${MAIL_FROM}"
-    host: "${MAIL_HOST}"
-    port: "${MAIL_PORT}"
-    username: "${MAIL_USERNAME}"
-    password: "${MAIL_PASSWORD}"
