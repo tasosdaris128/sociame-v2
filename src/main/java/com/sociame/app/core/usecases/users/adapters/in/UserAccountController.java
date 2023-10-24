@@ -7,6 +7,7 @@ import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import com.sociame.app.core.usecases.utils.annotations.GetMappingJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,14 +19,14 @@ public class UserAccountController {
     private final GetUserAccountUseCase userCase;
 
     @GetMappingJSON("/api/me")
-    public UserAccountResponseDTO getUserAccount(Authentication authentication) {
+    public ResponseEntity<UserAccountResponseDTO> getUserAccount(Authentication authentication) {
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
         GetUserAccountCommand command = new GetUserAccountCommand(user.getUsername());
         GetUserAccountResponse response = userCase.handleCommand(command);
 
-        if (response == null) return new UserAccountResponseDTO();
+        if (response == null) return ResponseEntity.notFound().build();
 
-        return new UserAccountResponseDTO(
+        return ResponseEntity.ok(new UserAccountResponseDTO(
                 response.accountId(),
                 response.userId(),
                 response.username(),
@@ -34,7 +35,7 @@ public class UserAccountController {
                 response.gender(),
                 response.plan(),
                 response.verified()
-        );
+        ));
     }
 
     public record UserAccountResponseDTO(
