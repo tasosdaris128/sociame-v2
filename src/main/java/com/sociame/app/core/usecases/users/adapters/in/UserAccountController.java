@@ -23,6 +23,8 @@ public class UserAccountController {
         GetUserAccountCommand command = new GetUserAccountCommand(user.getUsername());
         GetUserAccountResponse response = userCase.handleCommand(command);
 
+        if (response == null) return new UserAccountResponseDTO();
+
         return new UserAccountResponseDTO(
                 response.accountId(),
                 response.userId(),
@@ -44,6 +46,10 @@ public class UserAccountController {
             String gender,
             int plan,
             boolean verified
-    ) {}
+    ) {
+        public UserAccountResponseDTO() {
+            this(0L, 0L, "", "", "", "", 0, false);
+        }
+    }
 
 }
