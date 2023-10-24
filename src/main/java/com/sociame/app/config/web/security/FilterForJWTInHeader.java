@@ -36,7 +36,7 @@ public class FilterForJWTInHeader extends OncePerRequestFilter {
                     .flatMap(this::tryAuthenticate)
                     .ifPresent(SecurityContextHolder.getContext()::setAuthentication);
         } catch (Exception e) {
-            log.error("Exception while authenticating in Api Key or JWT Filter");
+            log.error("Exception while authenticating in Api Key or JWT Filter", e);
         }
         filterChain.doFilter(request, response);
     }
