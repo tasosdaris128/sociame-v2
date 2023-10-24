@@ -6,6 +6,6 @@ import java.util.Optional;
 
 public interface UserDetailsServicePort {
 
-    Optional<UserDetails> loadUserByUsernameAndPassword(String username, String password);
+    Optional<UserDetails> loadUserByUsername(String username);
 
 }

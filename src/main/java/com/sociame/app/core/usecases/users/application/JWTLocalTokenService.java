@@ -38,7 +38,7 @@ public class JWTLocalTokenService implements UserDetailsFromJWTokenUseCase {
                 .withNotBefore(now)
                 .withExpiresAt(nowAfterMinutes)
                 .withArrayClaim(
-                        "authorities",
+                        "authorities", // Although we are not gonna utilize them
                         authentication.getAuthorities().stream()
                                 .map(String::valueOf)
                                 .toArray(String[]::new))
@@ -52,9 +52,10 @@ public class JWTLocalTokenService implements UserDetailsFromJWTokenUseCase {
                 return Optional.empty();
             }
             final DecodedJWT decodedJWT = JWT.decode(jwtToken);
-            UserDetails userDetails = UserDetailsImpl.enabledForUsernamePassword(
+            UserDetails userDetails = UserDetailsImpl.enabledForUsernamePasswordAndAuthorities(
                     decodedJWT.getSubject(),
-                    jwtToken
+                    jwtToken,
+                    decodedJWT.getClaim("authorities").as(String[].class)
             );
             return Optional.of(userDetails);
         } catch (JWTDecodeException decodeException) {
@@ -82,11 +83,6 @@ public class JWTLocalTokenService implements UserDetailsFromJWTokenUseCase {
             JWT.require(HMAC512(settings.secret().getBytes(StandardCharsets.UTF_8)))
                     .withIssuer(settings.issuer())
                     .withSubject(userDetails.getUsername())
-                    .withArrayClaim(
-                            "authorities",
-                            userDetails.getAuthorities().stream()
-                                    .map(String::valueOf)
-                                    .toArray(String[]::new))
                     .build()
                     .verify(jwtToken);
         } catch (JWTVerificationException verificationException) {

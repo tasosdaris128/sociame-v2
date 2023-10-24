@@ -18,21 +18,22 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginService implements LoginUseCase {
 
-    private final UserAdapter dbAdapter;
+    private final UsernameAndPasswordAuthenticationProvider loginProvider;
 
     private final JWTLocalTokenService tokenService;
 
     @Override
     public LoginResponse handleCommand(LoginCommand command) {
-        final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(command.username(), command.password());
+        final UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                command.username(),
+                command.password()
+        );
 
-        Optional<UserDetails> user = dbAdapter.loadUserByUsernameAndPassword(command.username(), command.password());
+        final UsernamePasswordAuthenticationToken authenticatedUser =
+                ((UsernamePasswordAuthenticationToken) loginProvider.authenticate(auth));
 
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("");
-        }
+        final String jwtToken = tokenService.createToken(authenticatedUser);
 
-        final String jwtToken = tokenService.createToken(auth);
         return new LoginResponse(jwtToken);
     }
 }

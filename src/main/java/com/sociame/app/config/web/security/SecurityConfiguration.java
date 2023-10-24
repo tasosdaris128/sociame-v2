@@ -1,19 +1,18 @@
 package com.sociame.app.config.web.security;
 
+import com.sociame.app.core.usecases.users.application.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 
@@ -23,9 +22,12 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 @Slf4j
 public class SecurityConfiguration {
 
+    private final UserDetailsServiceImpl userDetailsService;
+
     private final SecurityConfigurationProperties props;
 
-    public SecurityConfiguration(SecurityConfigurationProperties optionsPlaceholder) {
+    public SecurityConfiguration(UserDetailsServiceImpl userDetailsService, SecurityConfigurationProperties optionsPlaceholder) {
+        this.userDetailsService = userDetailsService;
         this.props = optionsPlaceholder;
     }
 
@@ -34,109 +36,37 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @Order(1)
-    public SecurityFilterChain filterChainTenant(HttpSecurity http) throws Exception {
-        return http.securityMatcher("/api/**")
-                .addFilterBefore(oncePerRequestTenant(), AnonymousAuthenticationFilter.class)
-                .cors(Customizer.withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .requestCache(RequestCacheConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
-                    authorizationManagerRequestMatcherRegistry
-                            .requestMatchers("/api/**")
-                            .authenticated();
-                })
-                .build();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        log.info("Setting authentication manager...");
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        AuthenticationManager manager = authenticationManagerBuilder.build();
+        http.authenticationManager(manager);
+
+        log.info("Set CORS...");
+        http.cors(Customizer.withDefaults());
+
+        log.info("Disable CSRF...");
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        log.info("Set session management...");
+        http.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        log.info("Authorize patterns...");
+        http.authorizeHttpRequests(registry -> {
+            registry.requestMatchers("/api/**").authenticated();
+            registry.requestMatchers("/token/**").permitAll();
+        });
+
+        log.info("Adding filter before...");
+        http.addFilterBefore(oncePerRequestTenant(), AnonymousAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
-    @Order(2)
-    public SecurityFilterChain filterChainForUnprotected(HttpSecurity http) throws Exception {
-        return http.securityMatcher("/rest/**", "/token/**")
-                .cors(Customizer.withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .requestCache(RequestCacheConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
-                    authorizationManagerRequestMatcherRegistry
-                            .requestMatchers("/rest/**", "/token/**")
-                            .permitAll();
-                })
-                .build();
-    }
-
-    @ConditionalOnProperty(
-            name = "management.endpoints.web.security.enabled",
-            havingValue = "true",
-            matchIfMissing = false)
-    @Bean
-    @Order(3)
-    public SecurityFilterChain filterChainActuator(HttpSecurity http) throws Exception {
-
-        return http.securityMatcher("/actuator/**")
-                .cors(Customizer.withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .requestCache(RequestCacheConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
-                .httpBasic(basicConfig -> basicConfig.realmName("actuator realm"))
-                .authenticationProvider(new ActuatorAuthenticationProvider(new InMemoryUserDetailsManager(User.builder()
-                        .username(props.getActuatorSecurityProperties().getUsername())
-                        .password(props.getActuatorSecurityProperties().getPassword())
-                        .build())))
-                .authorizeHttpRequests(
-                        authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                                .requestMatchers("/actuator/**")
-                                .authenticated())
-                .build();
-    }
-
-    @ConditionalOnProperty(
-            name = "management.endpoints.web.security.enabled",
-            havingValue = "false",
-            matchIfMissing = true)
-    @Bean
-    @Order(3)
-    public SecurityFilterChain filterChainActuatorNoAuth(HttpSecurity http) throws Exception {
-        return http.securityMatcher("/actuator/**")
-                .cors(Customizer.withDefaults())
-                .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .requestCache(RequestCacheConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        authorizationManagerRequestMatcherRegistry -> authorizationManagerRequestMatcherRegistry
-                                .requestMatchers("/actuator/**")
-                                .permitAll())
-                .build();
-    }
-
-    @Bean
-    @Order(4)
-    public SecurityFilterChain filterChainForRemainingEndpoints(HttpSecurity http) throws Exception {
-        return http.sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .cors(Customizer.withDefaults())
-                .csrf(Customizer.withDefaults())
-                .requestCache(Customizer.withDefaults())
-                .formLogin(AbstractHttpConfigurer::disable)
-                .logout(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .build();
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

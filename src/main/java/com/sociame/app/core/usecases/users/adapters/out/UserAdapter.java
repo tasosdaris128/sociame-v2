@@ -1,6 +1,5 @@
 package com.sociame.app.core.usecases.users.adapters.out;
 
-import com.sociame.app.config.web.security.JWTSecurityProperties;
 import com.sociame.app.core.usecases.users.application.ports.out.UserDetailsServicePort;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +20,9 @@ public class UserAdapter implements UserDetailsServicePort {
 
     private final JdbcTemplate db;
 
-    private final JWTSecurityProperties properties;
-
     @Override
-    public Optional<UserDetails> loadUserByUsernameAndPassword(String username, String password) {
-        if (username == null || password == null) {
+    public Optional<UserDetails> loadUserByUsername(String username) {
+        if (username == null) {
             return Optional.empty();
         }
 
@@ -33,17 +31,27 @@ public class UserAdapter implements UserDetailsServicePort {
                     """
                         SELECT
                             username,
-                            password
+                            password,
+                            authorities,
+                            enabled,
+                            expired,
+                            locked,
+                            credentials_expired
                         FROM users
-                        WHERE username=? AND password = crypt(?, ?)
+                        WHERE username=?
                     """,
                     (result, rowNumber) -> new UserDetailsImpl(
                             result.getString("username"),
-                            result.getString("password")
+                            result.getString("password"),
+                            AuthorityUtils.createAuthorityList(
+                                    (String[]) result.getArray("authorities").getArray()
+                            ),
+                            result.getBoolean("enabled"),
+                            result.getBoolean("expired"),
+                            result.getBoolean("locked"),
+                            result.getBoolean("credentials_expired")
                     ),
-                    username,
-                    password,
-                    properties.getSalt()
+                    username
             );
 
             return Optional.ofNullable(user);
