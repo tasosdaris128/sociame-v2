@@ -1,7 +1,7 @@
 package com.sociame.app.core.usecases.users.application;
 
-import com.sociame.app.core.usecases.users.adapters.out.UserAccountAdapter;
 import com.sociame.app.core.usecases.users.application.ports.in.GetUserAccountUseCase;
+import com.sociame.app.core.usecases.users.application.ports.out.UserAccountServicePort;
 import com.sociame.app.core.usecases.users.domain.GetUserAccountCommand;
 import com.sociame.app.core.usecases.users.domain.GetUserAccountResponse;
 import com.sociame.app.core.usecases.users.domain.User;
@@ -16,11 +16,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GetUserAccountService implements GetUserAccountUseCase {
 
-    private final UserAccountAdapter db;
+    private final UserAccountServicePort port;
 
     @Override
     public GetUserAccountResponse handleCommand(GetUserAccountCommand command) {
-        Optional<User> optional = db.getUserAccountByUsername(command.username());
+        Optional<User> optional = port.getUserAccountByUsername(command.username());
 
         if (optional.isEmpty()) return null;
 
