@@ -10,15 +10,22 @@ import java.util.List;
 
 @Value
 public class User implements UserDetails {
+
     UserId id;
+    AccountId accountId;
     String password;
     String username;
+    String firstName;
+    String lastName;
+    String gender;
+    int plan;
     LocalDateTime createdAt;
     List<String> authorities;
     boolean enabled;
     boolean expired;
     boolean locked;
     boolean credentialsExpired;
+    boolean verified;
 
     public List<GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList(authorities.toArray(new String[0]));
@@ -42,4 +49,5 @@ public class User implements UserDetails {
     public boolean containsRole(String role) {
         return this.authorities.contains(role);
     }
+
 }
