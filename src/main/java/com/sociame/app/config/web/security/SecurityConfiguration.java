@@ -54,7 +54,8 @@ public class SecurityConfiguration {
 
         log.info("Authorize patterns...");
         http.authorizeHttpRequests(registry -> {
-            registry.requestMatchers("/api/**").authenticated();
+            registry.requestMatchers("/api/auth/**").authenticated();
+            registry.requestMatchers("/api/public/**").permitAll();
             registry.requestMatchers("/token/**").permitAll();
         });
 

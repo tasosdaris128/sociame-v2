@@ -18,7 +18,7 @@ public class UserAccountController {
 
     private final GetUserAccountUseCase userCase;
 
-    @GetMappingJSON("/api/me")
+    @GetMappingJSON("/api/auth/me")
     public ResponseEntity<UserAccountResponseDTO> getUserAccount(Authentication authentication) {
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
         GetUserAccountCommand command = new GetUserAccountCommand(user.getUsername());
