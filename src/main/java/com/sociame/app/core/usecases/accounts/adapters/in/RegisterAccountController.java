@@ -17,7 +17,7 @@ public class RegisterAccountController {
 
     private final RegisterAccountUseCase useCase;
 
-    @PostMappingJSON("/api/public/register")
+    @PostMappingJSON("/api/public/account/register")
     public ResponseEntity<Void> registerAccount(@RequestBody RegisterAccountDTO request) {
         log.info("Request: {}", request);
 
