@@ -50,3 +50,10 @@ Then, just run `./makew` in order to run it.
 - [ ] Get own posts.
 - [ ] Get following accounts posts.
 - [ ] Get followers accounts posts.
+
+## Posting business logic
+
+- Free users can post small text with a limit of 1000 characters.
+- Premium users can post text with a limit of 3000 characters.
+- Free users can comment up to 5 mes per post.
+- Premium users can comment unlimited mes.
