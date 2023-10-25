@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class SetupPasswordAdapter implements SetupPasswordServicePort {
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public String setupPassword(SetupPasswordCommand command) {
+    public Optional<String> setupPassword(SetupPasswordCommand command) {
 
         try {
             FindAccountResult accountResult = db.queryForObject(
@@ -42,7 +44,7 @@ public class SetupPasswordAdapter implements SetupPasswordServicePort {
             log.info("Account result: {}", accountResult);
 
             if (accountResult == null || accountResult.userId() == null || accountResult.accountId() == null) {
-                return null;
+                return Optional.empty();
             }
 
             String hashedPassword = passwordEncoder.encode(command.password());
@@ -57,7 +59,7 @@ public class SetupPasswordAdapter implements SetupPasswordServicePort {
 
             if (affectedRows < 1) return null;
 
-            return db.queryForObject(
+            return Optional.ofNullable(db.queryForObject(
                     """
                     SELECT
                         username
@@ -66,12 +68,12 @@ public class SetupPasswordAdapter implements SetupPasswordServicePort {
                     """,
                     (result, rowNumber) -> result.getString("username"),
                     accountResult.userId()
-            );
+            ));
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 
-        return null;
+        return Optional.empty();
 
     }
 

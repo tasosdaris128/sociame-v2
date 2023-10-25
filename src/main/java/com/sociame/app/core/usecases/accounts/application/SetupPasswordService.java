@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -19,17 +21,17 @@ public class SetupPasswordService implements SetupPasswordUseCase {
 
     @Override
     public boolean handleCommand(SetupPasswordCommand command) {
-        String email = port.setupPassword(command);
+        Optional<String> optional = port.setupPassword(command);
 
-        log.info("Email: {}", email);
+        log.info("Email: {}", optional);
 
-        if (email == null) return false;
+        if (optional.isEmpty()) return false;
 
-        new Thread(() -> mail.send(
+        optional.ifPresent(email -> new Thread(() -> mail.send(
                 email,
                 "Finished registration",
                 "Welcome to sociame!"
-        )).start();
+        )).start());
 
         return true;
     }

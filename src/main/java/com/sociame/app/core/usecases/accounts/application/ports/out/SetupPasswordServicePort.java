@@ -2,8 +2,10 @@ package com.sociame.app.core.usecases.accounts.application.ports.out;
 
 import com.sociame.app.core.usecases.accounts.domain.SetupPasswordCommand;
 
+import java.util.Optional;
+
 public interface SetupPasswordServicePort {
 
-    String setupPassword(SetupPasswordCommand command);
+    Optional<String> setupPassword(SetupPasswordCommand command);
 
 }
