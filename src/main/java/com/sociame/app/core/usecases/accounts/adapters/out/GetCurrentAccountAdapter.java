@@ -1,9 +1,8 @@
 package com.sociame.app.core.usecases.accounts.adapters.out;
 
-import com.sociame.app.core.usecases.accounts.application.ports.out.UpgradeAccountServicePort;
+import com.sociame.app.core.usecases.accounts.application.ports.out.GetCurrentAccountPort;
 import com.sociame.app.core.usecases.accounts.domain.Account;
 import com.sociame.app.core.usecases.accounts.domain.AccountId;
-import com.sociame.app.core.usecases.accounts.domain.UpgradeAccountCommand;
 import com.sociame.app.core.usecases.accounts.domain.UserId;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Transactional
-public class UpgradeAccountAdapter implements UpgradeAccountServicePort {
+public class GetCurrentAccountAdapter implements GetCurrentAccountPort {
 
     private final JdbcTemplate db;
 
@@ -65,28 +64,4 @@ public class UpgradeAccountAdapter implements UpgradeAccountServicePort {
             return Optional.empty();
         }
     }
-
-    @Override
-    public Optional<Account> upgradeAccount(UpgradeAccountCommand command) {
-        log.info("Upgrading: {}", command);
-
-        Optional<Account> optional = getCurrentAccount(command.username());
-
-        if (optional.isEmpty()) return Optional.empty();
-
-        Account currentAccount = optional.get();
-
-        log.info("Current account before update: {}", currentAccount);
-
-        int affectedRows = db.update(
-                "UPDATE account SET plan = ? WHERE id = ?",
-                command.plan(),
-                currentAccount.getId().id()
-        );
-
-        if (affectedRows < 1) return Optional.empty();
-
-        return getCurrentAccount(command.username());
-    }
-
 }

@@ -1,6 +1,6 @@
 package com.sociame.app.core.usecases.accounts.domain;
 
-public record UpgradedAccountResponse(
+public record ChangePlanResponse(
         long id,
 
         long userId,

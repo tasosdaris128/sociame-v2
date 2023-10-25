@@ -1,10 +1,11 @@
 package com.sociame.app.core.usecases.accounts.adapters.in;
 
-import com.sociame.app.core.usecases.accounts.application.ports.in.UpgradeAccountUseCase;
-import com.sociame.app.core.usecases.accounts.domain.UpgradeAccountCommand;
-import com.sociame.app.core.usecases.accounts.domain.UpgradedAccountResponse;
+import com.sociame.app.core.usecases.accounts.application.ports.in.ChangePlanUseCase;
+import com.sociame.app.core.usecases.accounts.domain.ChangePlanCommand;
+import com.sociame.app.core.usecases.accounts.domain.ChangePlanResponse;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import com.sociame.app.core.usecases.utils.annotations.PostMappingJSON;
+import com.sociame.app.core.usecases.utils.annotations.PutMappingJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,12 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class UpgradeAccountController {
+public class ChangePlanController {
 
-    private final UpgradeAccountUseCase useCase;
+    private final ChangePlanUseCase useCase;
 
-    @PostMappingJSON("/api/auth/account/upgrade/{planId}")
-    public ResponseEntity<AccountResponseDTO> upgradeAccount(
+    @PutMappingJSON("/api/auth/account/plan/{planId}")
+    public ResponseEntity<AccountResponseDTO> changePlan(
             Authentication authentication,
             @PathVariable(value = "planId") int plan
     ) {
@@ -31,14 +32,14 @@ public class UpgradeAccountController {
         log.info("Request principal: {}", principal);
         log.info("Requested plan: {}", plan);
 
-        Optional<UpgradedAccountResponse> response = useCase.handleCommand(new UpgradeAccountCommand(
+        Optional<ChangePlanResponse> response = useCase.handleCommand(new ChangePlanCommand(
                 plan,
                 principal.getUsername()
         ));
 
         if (response.isEmpty()) return ResponseEntity.badRequest().build();
 
-        UpgradedAccountResponse account = response.get();
+        ChangePlanResponse account = response.get();
 
         return ResponseEntity.ok(new AccountResponseDTO(
                 account.id(),
