@@ -4,7 +4,7 @@ A simple (and basic) social network example.
 
 ## Run
 
-Create an `/env` file with the following format:
+Create an `.env` file with the following format:
 
 ```bash
 #!/bin/bash
@@ -38,7 +38,7 @@ Then, just run `./makew` in order to run it.
 - [X] Login.
 - [X] Get user/account info.
 - [X] Registration Step 1 (Email invitation).
-- [ ] Registration Step 2 (Password setup).
+- [X] Registration Step 2 (Password setup).
 - [ ] Upgrade plan.
 - [ ] Downgrade plan.
 - [ ] Follow account.
