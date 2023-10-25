@@ -2,14 +2,11 @@ package com.sociame.app.core.usecases.accounts.application;
 
 import com.sociame.app.core.usecases.accounts.application.ports.in.SetupPasswordUseCase;
 import com.sociame.app.core.usecases.accounts.application.ports.out.SetupPasswordServicePort;
-import com.sociame.app.core.usecases.accounts.domain.Account;
 import com.sociame.app.core.usecases.accounts.domain.SetupPasswordCommand;
 import com.sociame.app.utils.Mail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,7 +19,17 @@ public class SetupPasswordService implements SetupPasswordUseCase {
 
     @Override
     public boolean handleCommand(SetupPasswordCommand command) {
-        Optional<Account> account = port.setupPassword(command);
+        String email = port.setupPassword(command);
+
+        log.info("Email: {}", email);
+
+        if (email == null) return false;
+
+        new Thread(() -> mail.send(
+                email,
+                "Finished registration",
+                "Welcome to sociame!"
+        )).start();
 
         return true;
     }
