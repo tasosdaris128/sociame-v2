@@ -37,7 +37,7 @@ Then, just run `./makew` in order to run it.
 
 - [X] Login.
 - [X] Get user/account info.
-- [ ] Registration Step 1 (Email invitation).
+- [X] Registration Step 1 (Email invitation).
 - [ ] Registration Step 2 (Password setup).
 - [ ] Upgrade plan.
 - [ ] Downgrade plan.
