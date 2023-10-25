@@ -23,7 +23,7 @@ public class ChangePlanService implements ChangePlanUseCase {
 
     @Override
     public Optional<ChangePlanResponse> handleCommand(ChangePlanCommand command) {
-        Optional<Account> optionalCurrentAccount =  accountPort.getCurrentAccount(command.username());
+        Optional<Account> optionalCurrentAccount = accountPort.getCurrentAccount(command.username());
 
         log.info("Current account optional: {}", optionalCurrentAccount);
 
