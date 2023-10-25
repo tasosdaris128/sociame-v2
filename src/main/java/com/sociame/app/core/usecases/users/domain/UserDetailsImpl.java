@@ -1,6 +1,5 @@
 package com.sociame.app.core.usecases.users.domain;
 
-import jakarta.validation.OverridesAttribute;
 import lombok.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
