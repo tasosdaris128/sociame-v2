@@ -4,7 +4,6 @@ import com.sociame.app.core.usecases.accounts.application.ports.in.ChangePlanUse
 import com.sociame.app.core.usecases.accounts.domain.ChangePlanCommand;
 import com.sociame.app.core.usecases.accounts.domain.ChangePlanResponse;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
-import com.sociame.app.core.usecases.utils.annotations.PostMappingJSON;
 import com.sociame.app.core.usecases.utils.annotations.PutMappingJSON;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
