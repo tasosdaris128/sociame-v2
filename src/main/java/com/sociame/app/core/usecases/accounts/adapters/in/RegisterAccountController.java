@@ -21,15 +21,13 @@ public class RegisterAccountController {
     public ResponseEntity<Void> registerAccount(@RequestBody RegisterAccountDTO request) {
         log.info("Request: {}", request);
 
-        RegisterAccountCommand command = new RegisterAccountCommand(
+        boolean result = useCase.handleCommand(new RegisterAccountCommand(
                 request.username(),
                 request.firstName(),
                 request.lastName(),
                 request.gender(),
                 request.plan()
-        );
-
-        boolean result = useCase.handleCommand(command);
+        ));
 
         if (!result) return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
