@@ -43,9 +43,7 @@ public class UserAdapter implements UserDetailsServicePort {
                     (result, rowNumber) -> new UserDetailsImpl(
                             result.getString("username"),
                             result.getString("password"),
-                            AuthorityUtils.createAuthorityList(
-                                    (String[]) result.getArray("authorities").getArray()
-                            ),
+                            AuthorityUtils.createAuthorityList(),
                             result.getBoolean("enabled"),
                             result.getBoolean("expired"),
                             result.getBoolean("locked"),
