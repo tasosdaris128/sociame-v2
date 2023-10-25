@@ -1,6 +1,5 @@
 package com.sociame.app.core.usecases.accounts.domain;
 
-import com.sociame.app.core.usecases.users.domain.AccountId;
 import lombok.Value;
 
 @Value
@@ -9,6 +8,8 @@ public class Account {
     AccountId id;
 
     UserId userId;
+
+    String username;
 
     String firstName;
 
