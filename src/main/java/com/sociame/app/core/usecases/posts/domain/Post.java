@@ -44,6 +44,8 @@ public class Post {
     }
 
     public Comment createComment(Comment newComment, Author commenter) {
+        if (this.comments == null || this.comments.isEmpty()) return newComment;
+
         createCommentBasedOnPlan: {
             long existingCommentsOfAuthor = this.comments.stream()
                     .filter(e -> e.author().id().equals(commenter.id()))

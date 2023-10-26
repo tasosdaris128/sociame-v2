@@ -9,4 +9,6 @@ public interface CreateCommentPort {
 
     Optional<Comment> createComment(long postId, String body, Author author);
 
+    Optional<Comment> createComment(Comment comment);
+
 }
