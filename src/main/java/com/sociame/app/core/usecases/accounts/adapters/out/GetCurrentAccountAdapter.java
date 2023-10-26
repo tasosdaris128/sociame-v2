@@ -1,9 +1,7 @@
 package com.sociame.app.core.usecases.accounts.adapters.out;
 
 import com.sociame.app.core.usecases.accounts.application.ports.out.GetCurrentAccountPort;
-import com.sociame.app.core.usecases.accounts.domain.Account;
-import com.sociame.app.core.usecases.accounts.domain.AccountId;
-import com.sociame.app.core.usecases.accounts.domain.UserId;
+import com.sociame.app.core.usecases.accounts.domain.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +10,8 @@ import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -53,12 +53,65 @@ public class GetCurrentAccountAdapter implements GetCurrentAccountPort {
                             result.getInt("plan"),
                             null,
                             0,
-                            true
+                            true,
+                            new ArrayList<>(),
+                            new ArrayList<>()
                     ),
                     username
             );
 
-            return Optional.ofNullable(account);
+            if (account == null) return Optional.empty();
+
+            List<Follower> followers = db.query(
+                    """
+                    SELECT
+                        f.follower AS follower,
+                        a.first_name AS first_name,
+                        a.last_name AS last_name
+                    FROM follow f
+                    JOIN account a
+                    ON (a.id = f.follower AND f.following = ?)
+                    """,
+                    (result, rowNum) -> new Follower(
+                            result.getLong("follower"),
+                            result.getString("first_name"),
+                            result.getString("last_name")
+                    ),
+                    account.getId().id()
+            );
+
+            List<Following> followings = db.query(
+                    """
+                    SELECT
+                        f.following AS following,
+                        a.first_name AS first_name,
+                        a.last_name AS last_name
+                    FROM follow f
+                    JOIN account a
+                    ON (a.id = f.following AND f.follower = ?)
+                    """,
+                    (result, rowNum) -> new Following(
+                            result.getLong("following"),
+                            result.getString("first_name"),
+                            result.getString("last_name")
+                    ),
+                    account.getId().id()
+            );
+
+            return Optional.of(new Account(
+                    account.getId(),
+                    account.getUserId(),
+                    account.getUsername(),
+                    account.getFirstName(),
+                    account.getLastName(),
+                    account.getGender(),
+                    account.getPlan(),
+                    null,
+                    0,
+                    true,
+                    followers,
+                    followings
+            ));
         } catch (IncorrectResultSetColumnCountException | EmptyResultDataAccessException e) {
             log.error(e.getMessage(), e);
             return Optional.empty();

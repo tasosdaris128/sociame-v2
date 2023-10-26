@@ -2,6 +2,8 @@ package com.sociame.app.core.usecases.accounts.domain;
 
 import lombok.Value;
 
+import java.util.List;
+
 @Value
 public class Account {
 
@@ -24,6 +26,10 @@ public class Account {
     int pin;
 
     boolean verified;
+
+    List<Follower> followers;
+
+    List<Following> followings;
 
     public boolean isValidPlan(int candidatePlan) {
         return (candidatePlan <= 2 && candidatePlan >= 1);

@@ -28,8 +28,6 @@ public class UnfollowAccountService implements UnfollowAccountUseCase {
 
         Account currentAccount = accountOptional.get();
 
-        // @TODO: At this point, after implementing the follower/following list we will apply the proper business logic in order to allow the unfollowing.
-
         return unfollowPort.unfollow(currentAccount.getId().id(), command.accountId());
     }
 }

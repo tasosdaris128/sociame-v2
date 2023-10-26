@@ -5,10 +5,13 @@ import com.sociame.app.core.usecases.accounts.application.ports.out.FollowAccoun
 import com.sociame.app.core.usecases.accounts.application.ports.out.GetCurrentAccountPort;
 import com.sociame.app.core.usecases.accounts.domain.Account;
 import com.sociame.app.core.usecases.accounts.domain.FollowAccountCommand;
+import com.sociame.app.core.usecases.accounts.domain.Follower;
+import com.sociame.app.core.usecases.accounts.domain.Following;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -28,7 +31,12 @@ public class FollowAccountService implements FollowAccountUseCase {
 
         Account currentAccount = accountOptional.get();
 
-        // @TODO: At this point, after implementing the follower/following list we will apply the proper business logic in order to allow the following.
+        // Preventing via business logic the duplicate following
+        Optional<Following> following = currentAccount.getFollowings()
+                .stream()
+                .filter(e -> Objects.equals(e.id(), command.accountId())).findAny();
+
+        if (following.isPresent()) return false;
 
         return followPort.follow(currentAccount.getId().id(), command.accountId());
     }
