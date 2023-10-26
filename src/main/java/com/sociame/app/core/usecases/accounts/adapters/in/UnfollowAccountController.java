@@ -33,7 +33,7 @@ public class UnfollowAccountController {
         if (!result) return ResponseEntity.badRequest().build();
 
         log.info("Request principal: {}", principal);
-        log.info("Account to follow: {}", accountId);
+        log.info("Account to unfollow: {}", accountId);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
