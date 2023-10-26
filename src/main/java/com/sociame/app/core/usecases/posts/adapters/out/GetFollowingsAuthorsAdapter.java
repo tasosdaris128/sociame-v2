@@ -1,6 +1,6 @@
 package com.sociame.app.core.usecases.posts.adapters.out;
 
-import com.sociame.app.core.usecases.posts.application.ports.out.GetFollowersAuthorsPort;
+import com.sociame.app.core.usecases.posts.application.ports.out.GetFollowingsAuthorsPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,30 +15,30 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Transactional
-public class GetFollowersAuthorsAdapter implements GetFollowersAuthorsPort {
+public class GetFollowingsAuthorsAdapter implements GetFollowingsAuthorsPort {
 
     private final JdbcTemplate db;
 
     @Override
-    public List<Author> getFollowers(long authorId) {
+    public List<Author> getFollowings(long authorId) {
         try {
-            
+
             return db.query(
                     """
                     SELECT
-                        f.follower AS follower,
+                        f.following AS following,
                         u.username AS username,
                         a.first_name AS first_name,
                         a.last_name AS last_name,
                         a.plan
                     FROM follow f
                     JOIN account a
-                    ON (a.id = f.follower AND f.following = ?)
+                    ON (a.id = f.following AND f.follower = ?)
                     JOIN users u
                     ON (a.user_id = u.id)
                     """,
                     (result, rowNum) -> new Author(
-                            result.getLong("follower"),
+                            result.getLong("following"),
                             result.getString("username"),
                             result.getString("first_name"),
                             result.getString("last_name"),
@@ -52,4 +52,5 @@ public class GetFollowersAuthorsAdapter implements GetFollowersAuthorsPort {
             return new ArrayList<>();
         }
     }
+
 }
