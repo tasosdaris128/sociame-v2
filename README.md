@@ -44,7 +44,7 @@ Then, just run `./makew` in order to run it.
 - [X] Follow account.
 - [X] Unfollow account.
 - [X] View followers and following accounts list.
-- [ ] Search accounts.
+- [X] Search accounts.
 - [ ] Make post.
 - [ ] Comment on post.
 - [ ] Get own posts.
