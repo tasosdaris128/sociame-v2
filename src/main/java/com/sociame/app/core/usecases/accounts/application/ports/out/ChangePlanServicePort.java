@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ChangePlanServicePort {
 
-    Optional<Account> changePlan(ChangePlanCommand command);
+    boolean changePlan(ChangePlanCommand command, Long accountId);
 
 }

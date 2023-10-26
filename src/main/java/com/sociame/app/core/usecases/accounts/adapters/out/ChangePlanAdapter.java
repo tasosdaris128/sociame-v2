@@ -20,30 +20,17 @@ public class ChangePlanAdapter implements ChangePlanServicePort {
 
     private final JdbcTemplate db;
 
-    // @Refactor: Just get the account id as a parameter.
-    private final GetCurrentAccountPort accountPort;
-
     @Override
-    public Optional<Account> changePlan(ChangePlanCommand command) {
+    public boolean changePlan(ChangePlanCommand command, Long accountId) {
         log.info("Upgrading: {}", command);
-
-        Optional<Account> optional = accountPort.getCurrentAccount(command.username());
-
-        if (optional.isEmpty()) return Optional.empty();
-
-        Account currentAccount = optional.get();
-
-        log.info("Current account before update: {}", currentAccount);
 
         int affectedRows = db.update(
                 "UPDATE account SET plan = ? WHERE id = ?",
                 command.plan(),
-                currentAccount.getId().id()
+                accountId
         );
 
-        if (affectedRows < 1) return Optional.empty();
-
-        return accountPort.getCurrentAccount(command.username());
+        return  (affectedRows > 0);
     }
 
 }

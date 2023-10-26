@@ -35,9 +35,11 @@ public class ChangePlanService implements ChangePlanUseCase {
 
         log.info("Can change plan...");
 
-        Optional<Account> optionalUpgradedAccount = servicePort.changePlan(command);
+        boolean result = servicePort.changePlan(command, currentAccount.getId().id());
 
-        log.info("Changed account optional: {}", optionalUpgradedAccount);
+        log.info("Changed account: {}", result);
+
+        Optional<Account> optionalUpgradedAccount = accountPort.getCurrentAccount(command.username());
 
         if (optionalUpgradedAccount.isEmpty()) return Optional.empty();
 
