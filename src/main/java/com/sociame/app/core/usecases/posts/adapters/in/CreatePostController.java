@@ -1,7 +1,7 @@
 package com.sociame.app.core.usecases.posts.adapters.in;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.CreatePostUseCase;
-import com.sociame.app.core.usecases.posts.domain.responses.CreatePostCommand;
+import com.sociame.app.core.usecases.posts.domain.CreatePostCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import com.sociame.app.core.usecases.utils.annotations.PostMappingJSON;

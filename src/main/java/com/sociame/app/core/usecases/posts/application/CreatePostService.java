@@ -5,7 +5,7 @@ import com.sociame.app.core.usecases.posts.application.ports.out.CreatePostPort;
 import com.sociame.app.core.usecases.posts.application.ports.out.GetCurrentAuthorPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Post;
-import com.sociame.app.core.usecases.posts.domain.responses.CreatePostCommand;
+import com.sociame.app.core.usecases.posts.domain.CreatePostCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

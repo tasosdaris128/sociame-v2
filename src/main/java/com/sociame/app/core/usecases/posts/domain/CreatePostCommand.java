@@ -1,4 +1,4 @@
-package com.sociame.app.core.usecases.posts.domain.responses;
+package com.sociame.app.core.usecases.posts.domain;
 
 public record CreatePostCommand(
         String title,
