@@ -2,6 +2,7 @@ package com.sociame.app.core.usecases.posts.domain;
 
 public record Author(
         Long id,
+        String username,
         String firstName,
         String lastName,
         int plan
