@@ -49,7 +49,7 @@ Then, just run `./makew` in order to run it.
 - [ ] Comment on post.
 - [X] Get own posts.
 - [ ] Get following accounts posts.
-- [ ] Get followers accounts posts.
+- [X] Get followers accounts posts.
 - [ ] Get comments of post.
 
 ## Posting business logic

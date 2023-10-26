@@ -1,8 +1,8 @@
 package com.sociame.app.core.usecases.posts.adapters.in;
 
-import com.sociame.app.core.usecases.posts.application.ports.in.GetOwnPostsUseCase;
-import com.sociame.app.core.usecases.posts.domain.GetOwnPostsCommand;
-import com.sociame.app.core.usecases.posts.domain.responses.GetAuthorPostsResponse;
+import com.sociame.app.core.usecases.posts.application.ports.in.GetFollowersPostsUseCase;
+import com.sociame.app.core.usecases.posts.domain.GetFollowersPostsCommand;
+import com.sociame.app.core.usecases.posts.domain.responses.GetFollowersPostsResponse;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import com.sociame.app.core.usecases.utils.annotations.GetMappingJSON;
 import lombok.RequiredArgsConstructor;
@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class GetOwnPostsController {
+public class GetFollowersPostsController {
 
-    private final GetOwnPostsUseCase useCase;
+    private final GetFollowersPostsUseCase useCase;
 
-    @GetMappingJSON("/api/auth/posts/own")
-    public ResponseEntity<GetAuthorPostsResponse> getOwnPosts(Authentication authentication) {
+    @GetMappingJSON("/api/auth/posts/followers")
+    public ResponseEntity<GetFollowersPostsResponse> getFollowersPosts(Authentication authentication) {
         UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
 
         log.info("Request principal: {}", principal);
 
-        return ResponseEntity.of(useCase.handleCommand(new GetOwnPostsCommand(principal.getUsername())));
+        return ResponseEntity.of(useCase.handleCommand(new GetFollowersPostsCommand(principal.getUsername())));
     }
 
 }

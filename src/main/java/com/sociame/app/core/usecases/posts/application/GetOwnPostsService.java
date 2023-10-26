@@ -6,7 +6,7 @@ import com.sociame.app.core.usecases.posts.application.ports.out.GetAuthorPostsP
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.GetOwnPostsCommand;
 import com.sociame.app.core.usecases.posts.domain.Post;
-import com.sociame.app.core.usecases.posts.domain.responses.GetOwnPostsResponse;
+import com.sociame.app.core.usecases.posts.domain.responses.GetAuthorPostsResponse;
 import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class GetOwnPostsService implements GetOwnPostsUseCase {
     private final GetCurrentAuthorPort authorPort;
 
     @Override
-    public Optional<GetOwnPostsResponse> handleCommand(GetOwnPostsCommand command) {
+    public Optional<GetAuthorPostsResponse> handleCommand(GetOwnPostsCommand command) {
         Optional<Author> optionalAuthor = authorPort.getCurrentAuthor(command.username());
 
         if (optionalAuthor.isEmpty()) return Optional.empty();
@@ -38,7 +38,7 @@ public class GetOwnPostsService implements GetOwnPostsUseCase {
 
         List<PostResponse> postResponses = post.stream().map(PostResponse::map).toList();
 
-        return Optional.of(new GetOwnPostsResponse(postResponses));
+        return Optional.of(new GetAuthorPostsResponse(postResponses));
     }
 
 }
