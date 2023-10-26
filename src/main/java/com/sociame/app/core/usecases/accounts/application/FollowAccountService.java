@@ -31,6 +31,8 @@ public class FollowAccountService implements FollowAccountUseCase {
 
         Account currentAccount = accountOptional.get();
 
+        if (Objects.equals(currentAccount.getId().id(), command.accountId())) return false;
+
         // Preventing via business logic the duplicate following
         Optional<Following> following = currentAccount.getFollowings()
                 .stream()
