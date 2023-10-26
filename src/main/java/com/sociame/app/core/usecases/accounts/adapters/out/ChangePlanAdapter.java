@@ -20,6 +20,7 @@ public class ChangePlanAdapter implements ChangePlanServicePort {
 
     private final JdbcTemplate db;
 
+    // @Refactor: Just get the account id as a parameter.
     private final GetCurrentAccountPort accountPort;
 
     @Override
