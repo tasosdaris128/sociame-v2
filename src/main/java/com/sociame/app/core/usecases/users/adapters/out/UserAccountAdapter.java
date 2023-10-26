@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@Deprecated
 @Slf4j
 @Component
 @RequiredArgsConstructor
