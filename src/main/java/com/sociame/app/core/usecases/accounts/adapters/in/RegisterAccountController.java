@@ -22,10 +22,10 @@ public class RegisterAccountController {
         log.info("Request: {}", request);
 
         boolean result = useCase.handleCommand(new RegisterAccountCommand(
-                request.username(),
-                request.firstName(),
-                request.lastName(),
-                request.gender(),
+                request.username().trim(),
+                request.firstName().trim(),
+                request.lastName().trim(),
+                request.gender().trim(),
                 request.plan()
         ));
 

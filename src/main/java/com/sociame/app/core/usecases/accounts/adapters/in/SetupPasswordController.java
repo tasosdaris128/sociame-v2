@@ -22,9 +22,9 @@ public class SetupPasswordController {
         log.info("Request: {}", request);
 
         boolean result = useCase.handleCommand(new SetupPasswordCommand(
-                request.verificationToken(),
+                request.verificationToken().trim(),
                 request.pin(),
-                request.password()
+                request.password().trim()
         ));
 
         if (!result) return ResponseEntity.badRequest().build();
