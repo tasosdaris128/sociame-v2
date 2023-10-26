@@ -41,8 +41,8 @@ Then, just run `./makew` in order to run it.
 - [X] Registration Step 2 (Password setup).
 - [X] Upgrade plan.
 - [X] Downgrade plan.
-- [ ] Follow account.
-- [ ] Unfollow account.
+- [X] Follow account.
+- [X] Unfollow account.
 - [ ] View followers and following accounts list.
 - [ ] Search accounts.
 - [ ] Make post.

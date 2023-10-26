@@ -17,6 +17,15 @@ public class FollowAccountAdapter implements FollowAccountServicePort {
 
     @Override
     public boolean follow(long followerId, long followingId) {
-        return true;
+
+        int affectedRows = db.update(
+                """
+                INSERT INTO follow (follower, following) VALUES (?, ?)
+                """,
+                followerId,
+                followingId
+        );
+
+        return (affectedRows > 0);
     }
 }

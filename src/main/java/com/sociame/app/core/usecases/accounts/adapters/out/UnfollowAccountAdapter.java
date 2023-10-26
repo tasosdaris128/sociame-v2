@@ -17,6 +17,16 @@ public class UnfollowAccountAdapter implements UnfollowAccountServicePort {
 
     @Override
     public boolean unfollow(long followerId, long followingId) {
-        return true;
+
+        int affectedRows = db.update(
+                """
+                DELETE FROM follow WHERE follower = ? AND following = ?
+                """,
+                followerId,
+                followingId
+        );
+
+        return (affectedRows > 0);
+
     }
 }
