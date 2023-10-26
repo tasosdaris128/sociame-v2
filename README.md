@@ -43,7 +43,7 @@ Then, just run `./makew` in order to run it.
 - [X] Downgrade plan.
 - [X] Follow account.
 - [X] Unfollow account.
-- [ ] View followers and following accounts list.
+- [X] View followers and following accounts list.
 - [ ] Search accounts.
 - [ ] Make post.
 - [ ] Comment on post.
