@@ -62,4 +62,8 @@ public class CreateCommentAdapter implements CreateCommentPort {
         }
     }
 
+    public Optional<Comment> createComment(Comment comment) {
+        return createComment(comment.postId(), comment.body(), comment.author());
+    }
+
 }

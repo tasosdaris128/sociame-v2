@@ -24,7 +24,7 @@ public class GetPostAdapter implements GetPostPort {
     @Override
     public Optional<Post> getPost(long postId) {
         try {
-            Post incompletePost = db.queryForObject(
+            Post post = db.queryForObject(
                     """
                     SELECT
                         id,
@@ -34,55 +34,43 @@ public class GetPostAdapter implements GetPostPort {
                     FROM account
                     WHERE id = ?
                     """,
-                    (result, rowNumber) -> new Post(
-                            new PostId(result.getLong("id")),
-                            result.getString("title"),
-                            result.getString("body"),
-                            new Author(
-                                    result.getLong("author_id"),
-                                    "",
-                                    "",
-                                    "",
-                                    0
-                            ),
-                            new ArrayList<>()
-                    ),
+                    (result, rowNumber) -> {
+                        long authorId = result.getLong("author_id");
+
+                        Author author = db.queryForObject(
+                                """
+                                    SELECT
+                                        a.id AS id,
+                                        u.username AS username,
+                                        a.first_name AS first_name,
+                                        a.last_name AS last_name,
+                                        a.plan AS plan
+                                    FROM account a
+                                    JOIN users u
+                                    ON (a.id = ? AND a.user_id = u.id)
+                                """,
+                                (r, rowNum) -> new Author(
+                                        r.getLong("id"),
+                                        r.getString("username"),
+                                        r.getString("first_name"),
+                                        r.getString("last_name"),
+                                        r.getInt("plan")
+                                ),
+                                authorId
+                        );
+
+                        return new Post(
+                                new PostId(result.getLong("id")),
+                                result.getString("title"),
+                                result.getString("body"),
+                                author,
+                                new ArrayList<>()
+                        );
+                    },
                     postId
             );
 
-            if (incompletePost == null) return Optional.empty();
-
-            Author author = db.queryForObject(
-                    """
-                        SELECT
-                            a.id AS id,
-                            u.username AS username,
-                            a.first_name AS first_name,
-                            a.last_name AS last_name,
-                            a.plan AS plan
-                        FROM account a
-                        JOIN users u
-                        ON (a.id = ? AND a.user_id = u.id)
-                    """,
-                    (result, rowNumber) -> new Author(
-                            result.getLong("id"),
-                            result.getString("username"),
-                            result.getString("first_name"),
-                            result.getString("last_name"),
-                            result.getInt("plan")
-                    ),
-                    incompletePost.getAuthor().id()
-            );
-
-            if (author == null) return Optional.empty();
-
-            return Optional.of(new Post(
-                    incompletePost.getPostId(),
-                    incompletePost.getTitle(),
-                    incompletePost.getBody(),
-                    author,
-                    incompletePost.getComments()
-            ));
+            return Optional.ofNullable(post);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return Optional.empty();
