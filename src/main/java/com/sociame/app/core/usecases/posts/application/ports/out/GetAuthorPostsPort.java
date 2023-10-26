@@ -5,8 +5,8 @@ import com.sociame.app.core.usecases.posts.domain.Post;
 
 import java.util.List;
 
-public interface GetOwnPostsPort {
+public interface GetAuthorPostsPort {
 
-    List<Post> getOwnPosts(Author author);
+    List<Post> getAuthorPosts(Author author);
 
 }

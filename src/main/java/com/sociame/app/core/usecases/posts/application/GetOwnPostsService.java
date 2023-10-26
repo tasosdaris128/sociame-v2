@@ -2,7 +2,7 @@ package com.sociame.app.core.usecases.posts.application;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.GetOwnPostsUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.out.GetCurrentAuthorPort;
-import com.sociame.app.core.usecases.posts.application.ports.out.GetOwnPostsPort;
+import com.sociame.app.core.usecases.posts.application.ports.out.GetAuthorPostsPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.GetOwnPostsCommand;
 import com.sociame.app.core.usecases.posts.domain.Post;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GetOwnPostsService implements GetOwnPostsUseCase {
 
-    private final GetOwnPostsPort postPort;
+    private final GetAuthorPostsPort postPort;
 
     private final GetCurrentAuthorPort authorPort;
 
@@ -32,7 +32,7 @@ public class GetOwnPostsService implements GetOwnPostsUseCase {
 
         Author author = optionalAuthor.get();
 
-        List<Post> post = postPort.getOwnPosts(author);
+        List<Post> post = postPort.getAuthorPosts(author);
 
         if (post.isEmpty()) return Optional.empty();
 

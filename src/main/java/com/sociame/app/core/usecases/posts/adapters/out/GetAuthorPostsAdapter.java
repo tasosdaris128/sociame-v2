@@ -1,6 +1,6 @@
 package com.sociame.app.core.usecases.posts.adapters.out;
 
-import com.sociame.app.core.usecases.posts.application.ports.out.GetOwnPostsPort;
+import com.sociame.app.core.usecases.posts.application.ports.out.GetAuthorPostsPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Post;
 import com.sociame.app.core.usecases.posts.domain.PostId;
@@ -17,12 +17,12 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Transactional
-public class GetOwnPostsAdapter implements GetOwnPostsPort {
+public class GetAuthorPostsAdapter implements GetAuthorPostsPort {
 
     private final JdbcTemplate db;
 
     @Override
-    public List<Post> getOwnPosts(Author author) {
+    public List<Post> getAuthorPosts(Author author) {
         try {
             return db.query(
                     """
