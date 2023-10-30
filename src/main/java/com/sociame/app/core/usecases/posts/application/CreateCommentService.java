@@ -7,7 +7,7 @@ import com.sociame.app.core.usecases.posts.application.ports.in.GetPostUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.out.CreateCommentPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Comment;
-import com.sociame.app.core.usecases.posts.domain.CreateCommentCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.CreateCommentCommand;
 import com.sociame.app.core.usecases.posts.domain.Post;
 import com.sociame.app.core.usecases.posts.domain.responses.CreateCommentResponse;
 import lombok.RequiredArgsConstructor;

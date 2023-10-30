@@ -1,7 +1,7 @@
 package com.sociame.app.core.usecases.posts.adapters.in;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.GetCommentsUseCase;
-import com.sociame.app.core.usecases.posts.domain.GetCommentsCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.GetCommentsCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.CommentResponse;
 import com.sociame.app.core.usecases.utils.annotations.GetMappingJSON;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.sociame.app.core.usecases.posts.adapters.in;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.CreateCommentUseCase;
-import com.sociame.app.core.usecases.posts.domain.CreateCommentCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.CreateCommentCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.CreateCommentResponse;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import com.sociame.app.core.usecases.utils.annotations.PostMappingJSON;

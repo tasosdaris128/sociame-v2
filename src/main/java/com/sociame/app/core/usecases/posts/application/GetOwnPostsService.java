@@ -4,7 +4,7 @@ import com.sociame.app.core.usecases.posts.application.ports.in.GetAuthorPostsUs
 import com.sociame.app.core.usecases.posts.application.ports.in.GetCurrentAuthorUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.in.GetOwnPostsUseCase;
 import com.sociame.app.core.usecases.posts.domain.Author;
-import com.sociame.app.core.usecases.posts.domain.GetOwnPostsCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.GetOwnPostsCommand;
 import com.sociame.app.core.usecases.posts.domain.Post;
 import com.sociame.app.core.usecases.posts.domain.responses.GetAuthorPostsResponse;
 import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;

@@ -1,7 +1,7 @@
 package com.sociame.app.core.usecases.posts.adapters.in;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.GetFollowingPostsUseCase;
-import com.sociame.app.core.usecases.posts.domain.GetFollowingsPostsCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.GetFollowingsPostsCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.GetFollowingsPostsResponse;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import com.sociame.app.core.usecases.utils.annotations.GetMappingJSON;

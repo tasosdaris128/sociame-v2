@@ -5,7 +5,7 @@ import com.sociame.app.core.usecases.posts.application.ports.in.GetCurrentAuthor
 import com.sociame.app.core.usecases.posts.application.ports.in.GetFollowingPostsUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.in.GetFollowingsAuthorsUseCase;
 import com.sociame.app.core.usecases.posts.domain.Author;
-import com.sociame.app.core.usecases.posts.domain.GetFollowingsPostsCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.GetFollowingsPostsCommand;
 import com.sociame.app.core.usecases.posts.domain.Post;
 import com.sociame.app.core.usecases.posts.domain.responses.GetFollowingsPostsResponse;
 import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;

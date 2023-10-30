@@ -2,7 +2,7 @@ package com.sociame.app.core.usecases.posts.application;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.GetCommentsUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.out.GetCommentsPort;
-import com.sociame.app.core.usecases.posts.domain.GetCommentsCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.GetCommentsCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.CommentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

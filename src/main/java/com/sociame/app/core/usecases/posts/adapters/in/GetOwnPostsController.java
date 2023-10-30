@@ -1,7 +1,7 @@
 package com.sociame.app.core.usecases.posts.adapters.in;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.GetOwnPostsUseCase;
-import com.sociame.app.core.usecases.posts.domain.GetOwnPostsCommand;
+import com.sociame.app.core.usecases.posts.domain.commands.GetOwnPostsCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.GetAuthorPostsResponse;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import com.sociame.app.core.usecases.utils.annotations.GetMappingJSON;
