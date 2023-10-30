@@ -1,8 +1,8 @@
 package com.sociame.app.core.usecases.posts.domain.responses;
 
+import com.sociame.app.core.usecases.posts.domain.Comment;
 import com.sociame.app.core.usecases.posts.domain.Post;
-import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
-import com.sociame.app.core.usecases.posts.domain.responses.CommentResponse;
+import com.sociame.app.core.usecases.posts.domain.PostId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +33,26 @@ public record PostResponse(
                 post.getTitle(),
                 post.getBody(),
                 AuthorResponse.map(post.getAuthor()),
+                comments
+        );
+    }
+
+    public Post toDomain() {
+        List<Comment> comments;
+
+        if (this.comments.isEmpty()) {
+            comments = new ArrayList<>();
+        } else {
+            comments = this.comments.stream()
+                    .map(CommentResponse::toDomain)
+                    .toList();
+        }
+
+        return new Post(
+                new PostId(this.id),
+                this.title,
+                this.body,
+                this.author.toDomain(),
                 comments
         );
     }
