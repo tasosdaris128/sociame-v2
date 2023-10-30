@@ -1,5 +1,6 @@
 package com.sociame.app.core.usecases.users.adapters.out;
 
+import com.sociame.app.config.web.KnownRuntimeError;
 import com.sociame.app.core.usecases.users.application.ports.out.UserDetailsServicePort;
 import com.sociame.app.core.usecases.users.domain.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class UserAdapter implements UserDetailsServicePort {
             return Optional.ofNullable(user);
         } catch (IncorrectResultSetColumnCountException | EmptyResultDataAccessException e) {
             log.error(e.getMessage(), e);
-            return Optional.empty();
+            throw new KnownRuntimeError("User not found", e, KnownRuntimeError.ErrorType.NOT_FOUND);
         }
     }
 

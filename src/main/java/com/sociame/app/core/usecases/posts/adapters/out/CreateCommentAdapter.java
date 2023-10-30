@@ -3,13 +3,16 @@ package com.sociame.app.core.usecases.posts.adapters.out;
 import com.sociame.app.core.usecases.posts.application.ports.out.CreateCommentPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Comment;
+import com.sociame.app.core.usecases.posts.domain.responses.CreateCommentResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.sql.PreparedStatement;
 
 @Slf4j
 @Component
@@ -20,50 +23,37 @@ public class CreateCommentAdapter implements CreateCommentPort {
     private final JdbcTemplate db;
 
     @Override
-    public Optional<Comment> createComment(long postId, String body, Author author) {
+    public CreateCommentResponse createComment(long postId, String body, Author author) {
         try {
-            int affectedRows = db.update(
-                    """
-                    INSERT INTO comment (body, post_id, author_id) VALUES (?, ?, ?)
-                    """,
-                    body,
-                    postId,
-                    author.id()
-            );
+            KeyHolder keyHolder = new GeneratedKeyHolder();
 
-            if (affectedRows < 1) return Optional.empty();
+            int affectedRows = db.update(connection -> {
+                PreparedStatement statement = connection.prepareStatement(
+                        "INSERT INTO comment (body, post_id, author_id) VALUES (?, ?, ?)"
+                );
 
-            Integer commentId = db.queryForObject("SELECT currval('comment_id_seq')", Integer.class);
+                statement.setString(1, body);
+                statement.setLong(2, postId);
+                statement.setLong(3, author.id());
 
-            if (commentId == null) return Optional.empty();
+                return statement;
+            }, keyHolder);
 
-            Comment comment = db.queryForObject(
-                    """
-                    SELECT
-                        id,
-                        body,
-                        post_id
-                    FROM comment
-                    WHERE id =?
-                    """,
-                    (result, rowNumber) -> new Comment(
-                            result.getLong("id"),
-                            result.getString("body"),
-                            result.getLong("post_id"),
-                            author
-                    ),
-                    commentId
-            );
+            if (affectedRows < 1) throw new RuntimeException("Unable to insert comment into DB.");
 
-            return Optional.ofNullable(comment);
+            Long commentId = (Long) keyHolder.getKey();
+
+            if (commentId == null) throw new RuntimeException("Unable to retrieve the ID of the comment.");
+
+            return new CreateCommentResponse(commentId);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Optional.empty();
+            throw  new RuntimeException(e.getMessage());
         }
     }
 
     @Override
-    public Optional<Comment> createComment(Comment comment) {
+    public CreateCommentResponse createComment(Comment comment) {
         return createComment(comment.postId(), comment.body(), comment.author());
     }
 
