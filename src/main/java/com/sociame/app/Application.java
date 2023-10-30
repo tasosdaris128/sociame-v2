@@ -19,7 +19,7 @@ public class Application {
 
 	private static class ShutdownHook extends Thread {
 
-		private ConfigurableApplicationContext context;
+		private final ConfigurableApplicationContext context;
 
 		ShutdownHook(ConfigurableApplicationContext context) {
 			this.context = context;
