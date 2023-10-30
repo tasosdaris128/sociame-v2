@@ -18,4 +18,14 @@ public record AuthorResponse(
                 author.plan()
         );
     }
+
+    public Author toDomain() {
+        return new Author(
+                this.id,
+                this.username,
+                this.firstName,
+                this.lastName,
+                this.plan
+        );
+    }
 }
