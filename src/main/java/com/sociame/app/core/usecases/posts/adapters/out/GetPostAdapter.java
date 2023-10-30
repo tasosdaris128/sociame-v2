@@ -5,7 +5,6 @@ import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Comment;
 import com.sociame.app.core.usecases.posts.domain.Post;
 import com.sociame.app.core.usecases.posts.domain.PostId;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +16,6 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class GetPostAdapter implements GetPostPort {
 
     private final JdbcTemplate db;
@@ -68,7 +66,7 @@ public class GetPostAdapter implements GetPostPort {
                                     post_id,
                                     author_id
                                 FROM comment
-                                WHERE post_id = ? LIMIT 100
+                                WHERE post_id = ?
                                 """,
                                 (r,  rowNum) -> {
                                     long commentAuthorId = r.getLong("author_id");

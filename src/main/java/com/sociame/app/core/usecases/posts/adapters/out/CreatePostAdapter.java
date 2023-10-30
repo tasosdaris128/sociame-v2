@@ -3,7 +3,6 @@ package com.sociame.app.core.usecases.posts.adapters.out;
 import com.sociame.app.core.usecases.posts.application.ports.out.CreatePostPort;
 import com.sociame.app.core.usecases.posts.domain.Post;
 import com.sociame.app.core.usecases.posts.domain.responses.CreatePostResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +16,6 @@ import java.sql.Statement;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class CreatePostAdapter implements CreatePostPort {
 
     private final JdbcTemplate db;

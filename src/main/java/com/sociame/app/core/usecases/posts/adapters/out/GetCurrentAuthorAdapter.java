@@ -2,7 +2,6 @@ package com.sociame.app.core.usecases.posts.adapters.out;
 
 import com.sociame.app.core.usecases.posts.application.ports.out.GetCurrentAuthorPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,7 +14,6 @@ import java.util.Optional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class GetCurrentAuthorAdapter implements GetCurrentAuthorPort {
 
     private final JdbcTemplate db;

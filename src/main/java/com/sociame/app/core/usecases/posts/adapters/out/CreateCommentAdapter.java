@@ -4,7 +4,6 @@ import com.sociame.app.core.usecases.posts.application.ports.out.CreateCommentPo
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Comment;
 import com.sociame.app.core.usecases.posts.domain.responses.CreateCommentResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,7 +17,6 @@ import java.sql.Statement;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class CreateCommentAdapter implements CreateCommentPort {
 
     private final JdbcTemplate db;

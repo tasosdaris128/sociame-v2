@@ -2,7 +2,6 @@ package com.sociame.app.core.usecases.posts.adapters.out;
 
 import com.sociame.app.core.usecases.posts.application.ports.out.GetFollowersAuthorsPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,7 +13,6 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class GetFollowersAuthorsAdapter implements GetFollowersAuthorsPort {
 
     private final JdbcTemplate db;

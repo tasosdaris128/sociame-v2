@@ -3,19 +3,16 @@ package com.sociame.app.core.usecases.posts.adapters.out;
 import com.sociame.app.core.usecases.posts.application.ports.out.GetCommentsPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Comment;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class GetCommentsAdapter implements GetCommentsPort {
 
     private final JdbcTemplate db;

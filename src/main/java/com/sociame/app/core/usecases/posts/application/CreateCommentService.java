@@ -2,9 +2,9 @@ package com.sociame.app.core.usecases.posts.application;
 
 import com.sociame.app.config.web.KnownRuntimeError;
 import com.sociame.app.core.usecases.posts.application.ports.in.CreateCommentUseCase;
+import com.sociame.app.core.usecases.posts.application.ports.in.GetCurrentAuthorUseCase;
+import com.sociame.app.core.usecases.posts.application.ports.in.GetPostUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.out.CreateCommentPort;
-import com.sociame.app.core.usecases.posts.application.ports.out.GetCurrentAuthorPort;
-import com.sociame.app.core.usecases.posts.application.ports.out.GetPostPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Comment;
 import com.sociame.app.core.usecases.posts.domain.CreateCommentCommand;
@@ -13,23 +13,25 @@ import com.sociame.app.core.usecases.posts.domain.responses.CreateCommentRespons
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CreateCommentService implements CreateCommentUseCase {
 
-    private final GetCurrentAuthorPort authorPort;
+    private final GetCurrentAuthorUseCase authorUseCase;
+
+    private final GetPostUseCase postUseCase;
 
     private final CreateCommentPort commentPort;
 
-    private final GetPostPort postPort;
-
     @Override
     public CreateCommentResponse handleCommand(CreateCommentCommand command) {
-        Optional<Author> optionalAuthor = authorPort.getCurrentAuthor(command.username());
+        Optional<Author> optionalAuthor = authorUseCase.getCurrentAuthor(command.username());
 
         if (optionalAuthor.isEmpty()) {
             throw new KnownRuntimeError("Unable to retrieve current author.");
@@ -37,7 +39,7 @@ public class CreateCommentService implements CreateCommentUseCase {
 
         Author author = optionalAuthor.get();
 
-        Optional<Post> optionalPost = postPort.getPost(command.postId());
+        Optional<Post> optionalPost = postUseCase.getPost(command.postId());
 
         if (optionalPost.isEmpty()) {
             throw new KnownRuntimeError("Unable to retrieve post.");
@@ -54,7 +56,7 @@ public class CreateCommentService implements CreateCommentUseCase {
 
         Comment newComment = post.createComment(candidateComment, author);
 
-        if (newComment == null) throw new KnownRuntimeError("You are exceeded your plan's comment quota.");
+        if (newComment == null) throw new KnownRuntimeError("You have exceeded your plan's comment quota.");
 
         return commentPort.createComment(newComment);
     }

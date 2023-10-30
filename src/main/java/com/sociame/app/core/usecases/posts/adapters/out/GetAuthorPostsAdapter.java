@@ -4,7 +4,6 @@ import com.sociame.app.core.usecases.posts.application.ports.out.GetAuthorPostsP
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Post;
 import com.sociame.app.core.usecases.posts.domain.PostId;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +15,6 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class GetAuthorPostsAdapter implements GetAuthorPostsPort {
 
     private final JdbcTemplate db;
