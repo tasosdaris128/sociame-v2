@@ -7,15 +7,13 @@ import com.sociame.app.core.usecases.posts.application.ports.in.GetPostUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.out.CreateCommentPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.Comment;
-import com.sociame.app.core.usecases.posts.domain.commands.CreateCommentCommand;
 import com.sociame.app.core.usecases.posts.domain.Post;
+import com.sociame.app.core.usecases.posts.domain.commands.CreateCommentCommand;
 import com.sociame.app.core.usecases.posts.domain.responses.CreateCommentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,21 +29,9 @@ public class CreateCommentService implements CreateCommentUseCase {
 
     @Override
     public CreateCommentResponse handleCommand(CreateCommentCommand command) {
-        Optional<Author> optionalAuthor = authorUseCase.getCurrentAuthor(command.username());
+        Author author = authorUseCase.getCurrentAuthor(command.username()).toDomain();
 
-        if (optionalAuthor.isEmpty()) {
-            throw new KnownRuntimeError("Unable to retrieve current author.");
-        }
-
-        Author author = optionalAuthor.get();
-
-        Optional<Post> optionalPost = postUseCase.getPost(command.postId());
-
-        if (optionalPost.isEmpty()) {
-            throw new KnownRuntimeError("Unable to retrieve post.");
-        }
-
-        Post post = optionalPost.get();
+        Post post = postUseCase.getPost(command.postId()).toDomain();
 
         Comment candidateComment = new Comment(
                 0L,

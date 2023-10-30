@@ -1,17 +1,15 @@
 package com.sociame.app.core.usecases.posts.adapters.out;
 
 import com.sociame.app.core.usecases.posts.application.ports.out.GetPostPort;
-import com.sociame.app.core.usecases.posts.domain.Author;
-import com.sociame.app.core.usecases.posts.domain.Comment;
-import com.sociame.app.core.usecases.posts.domain.Post;
-import com.sociame.app.core.usecases.posts.domain.PostId;
+import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
+import com.sociame.app.core.usecases.posts.domain.responses.CommentResponse;
+import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -21,9 +19,10 @@ public class GetPostAdapter implements GetPostPort {
     private final JdbcTemplate db;
 
     @Override
-    public Optional<Post> getPost(long postId) {
+    public PostResponse getPost(long postId) {
         try {
-            Post post = db.queryForObject(
+
+            return db.queryForObject(
                     """
                     SELECT
                         id,
@@ -36,7 +35,7 @@ public class GetPostAdapter implements GetPostPort {
                     (result, rowNumber) -> {
                         long authorId = result.getLong("author_id");
 
-                        Author author = db.queryForObject(
+                        AuthorResponse author = db.queryForObject(
                                 """
                                     SELECT
                                         a.id AS id,
@@ -48,7 +47,7 @@ public class GetPostAdapter implements GetPostPort {
                                     JOIN users u
                                     ON (a.id = ? AND a.user_id = u.id)
                                 """,
-                                (r, rowNum) -> new Author(
+                                (r, rowNum) -> new AuthorResponse(
                                         r.getLong("id"),
                                         r.getString("username"),
                                         r.getString("first_name"),
@@ -58,7 +57,7 @@ public class GetPostAdapter implements GetPostPort {
                                 authorId
                         );
 
-                        List<Comment> comments = db.query(
+                        List<CommentResponse> comments = db.query(
                                 """
                                 SELECT
                                     id,
@@ -71,7 +70,7 @@ public class GetPostAdapter implements GetPostPort {
                                 (r,  rowNum) -> {
                                     long commentAuthorId = r.getLong("author_id");
 
-                                    Author commentAuthor = db.queryForObject(
+                                    AuthorResponse commentAuthor = db.queryForObject(
                                             """
                                                 SELECT
                                                     a.id AS id,
@@ -83,7 +82,7 @@ public class GetPostAdapter implements GetPostPort {
                                                 JOIN users u
                                                 ON (a.id = ? AND a.user_id = u.id)
                                             """,
-                                            (rsl, rNum) -> new Author(
+                                            (rsl, rNum) -> new AuthorResponse(
                                                     rsl.getLong("id"),
                                                     rsl.getString("username"),
                                                     rsl.getString("first_name"),
@@ -93,7 +92,7 @@ public class GetPostAdapter implements GetPostPort {
                                             commentAuthorId
                                     );
 
-                                    return new Comment(
+                                    return new CommentResponse(
                                             r.getLong("id"),
                                             r.getString("body"),
                                             r.getLong("post_id"),
@@ -103,8 +102,8 @@ public class GetPostAdapter implements GetPostPort {
                                 postId
                         );
 
-                        return new Post(
-                                new PostId(result.getLong("id")),
+                        return new PostResponse(
+                                result.getLong("id"),
                                 result.getString("title"),
                                 result.getString("body"),
                                 author,
@@ -113,8 +112,6 @@ public class GetPostAdapter implements GetPostPort {
                     },
                     postId
             );
-
-            return Optional.ofNullable(post);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);

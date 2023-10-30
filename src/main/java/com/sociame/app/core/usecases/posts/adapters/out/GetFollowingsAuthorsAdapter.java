@@ -1,7 +1,7 @@
 package com.sociame.app.core.usecases.posts.adapters.out;
 
 import com.sociame.app.core.usecases.posts.application.ports.out.GetFollowingsAuthorsPort;
-import com.sociame.app.core.usecases.posts.domain.Author;
+import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +17,7 @@ public class GetFollowingsAuthorsAdapter implements GetFollowingsAuthorsPort {
     private final JdbcTemplate db;
 
     @Override
-    public List<Author> getFollowings(long authorId) {
+    public List<AuthorResponse> getFollowings(long authorId) {
         try {
 
             return db.query(
@@ -34,7 +34,7 @@ public class GetFollowingsAuthorsAdapter implements GetFollowingsAuthorsPort {
                     JOIN users u
                     ON (a.user_id = u.id)
                     """,
-                    (result, rowNum) -> new Author(
+                    (result, rowNum) -> new AuthorResponse(
                             result.getLong("following"),
                             result.getString("username"),
                             result.getString("first_name"),

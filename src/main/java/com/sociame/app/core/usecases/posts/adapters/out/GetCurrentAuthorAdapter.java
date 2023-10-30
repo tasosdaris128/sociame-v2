@@ -1,15 +1,14 @@
 package com.sociame.app.core.usecases.posts.adapters.out;
 
+import com.sociame.app.config.web.KnownRuntimeError;
 import com.sociame.app.core.usecases.posts.application.ports.out.GetCurrentAuthorPort;
-import com.sociame.app.core.usecases.posts.domain.Author;
+import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.IncorrectResultSetColumnCountException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -19,13 +18,13 @@ public class GetCurrentAuthorAdapter implements GetCurrentAuthorPort {
     private final JdbcTemplate db;
 
     @Override
-    public Optional<Author> getCurrentAuthor(String username) {
+    public AuthorResponse getCurrentAuthor(String username) {
         if (username == null) {
-            return Optional.empty();
+            throw new KnownRuntimeError("Unable to retrieve current author's username.");
         }
 
         try {
-            Author author = db.queryForObject(
+            return db.queryForObject(
                     """
                         SELECT
                             account_id,
@@ -35,7 +34,7 @@ public class GetCurrentAuthorAdapter implements GetCurrentAuthorPort {
                             plan
                         FROM user_account(?)
                     """,
-                    (result, rowNumber) -> new Author(
+                    (result, rowNumber) -> new AuthorResponse(
                             result.getLong("account_id"),
                             result.getString("username"),
                             result.getString("first_name"),
@@ -44,13 +43,9 @@ public class GetCurrentAuthorAdapter implements GetCurrentAuthorPort {
                     ),
                     username
             );
-
-            if (author == null) return Optional.empty();
-
-            return Optional.of(author);
         } catch (IncorrectResultSetColumnCountException | EmptyResultDataAccessException e) {
             log.error(e.getMessage(), e);
-            return Optional.empty();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

@@ -6,7 +6,7 @@ import com.sociame.app.core.usecases.posts.application.ports.in.GetFollowingPost
 import com.sociame.app.core.usecases.posts.application.ports.in.GetFollowingsAuthorsUseCase;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.commands.GetFollowingsPostsCommand;
-import com.sociame.app.core.usecases.posts.domain.Post;
+import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
 import com.sociame.app.core.usecases.posts.domain.responses.GetFollowingsPostsResponse;
 import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,23 +31,19 @@ public class GetFollowingsPostsService implements GetFollowingPostsUseCase {
 
     @Override
     public GetFollowingsPostsResponse handleCommand(GetFollowingsPostsCommand command) {
-        List<Post> posts = new ArrayList<>();
+        List<PostResponse> posts = new ArrayList<>();
 
-        Optional<Author> optionalAuthor = authorUseCase.getCurrentAuthor(command.username());
+        Author author = authorUseCase.getCurrentAuthor(command.username()).toDomain();
 
-        if (optionalAuthor.isEmpty()) throw new RuntimeException("Unable to retrieve current author.");
-
-        Author currentAuthor = optionalAuthor.get();
-
-        List<Author> followings = followingsUseCase.getFollowings(currentAuthor.id());
+        List<AuthorResponse> followings = followingsUseCase.getFollowings(author.id());
 
         if (followings.isEmpty()) return new GetFollowingsPostsResponse(new ArrayList<>());
 
         followings.forEach(e -> {
-            List<Post> authorPosts = postsUseCase.getAuthorPosts(e);
+            List<PostResponse> authorPosts = postsUseCase.getAuthorPosts(e);
             if (!authorPosts.isEmpty()) posts.addAll(authorPosts);
         });
 
-        return new GetFollowingsPostsResponse(posts.stream().map(PostResponse::map).toList());
+        return new GetFollowingsPostsResponse(posts);
     }
 }

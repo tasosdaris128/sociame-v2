@@ -1,9 +1,8 @@
 package com.sociame.app.core.usecases.posts.adapters.out;
 
 import com.sociame.app.core.usecases.posts.application.ports.out.GetAuthorPostsPort;
-import com.sociame.app.core.usecases.posts.domain.Author;
-import com.sociame.app.core.usecases.posts.domain.Post;
-import com.sociame.app.core.usecases.posts.domain.PostId;
+import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
+import com.sociame.app.core.usecases.posts.domain.responses.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +19,7 @@ public class GetAuthorPostsAdapter implements GetAuthorPostsPort {
     private final JdbcTemplate db;
 
     @Override
-    public List<Post> getAuthorPosts(Author author) {
+    public List<PostResponse> getAuthorPosts(AuthorResponse author) {
         try {
             return db.query(
                     """
@@ -32,8 +31,8 @@ public class GetAuthorPostsAdapter implements GetAuthorPostsPort {
                     FROM post
                     WHERE author_id = ? LIMIT 100
                     """,
-                    (result, rowNumber) -> new Post(
-                            new PostId(result.getLong("id")),
+                    (result, rowNumber) -> new PostResponse(
+                            result.getLong("id"),
                             result.getString("title"),
                             result.getString("body"),
                             author,

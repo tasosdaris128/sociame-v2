@@ -1,13 +1,12 @@
 package com.sociame.app.core.usecases.posts.adapters.out;
 
 import com.sociame.app.core.usecases.posts.application.ports.out.GetFollowersAuthorsPort;
-import com.sociame.app.core.usecases.posts.domain.Author;
+import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -18,7 +17,7 @@ public class GetFollowersAuthorsAdapter implements GetFollowersAuthorsPort {
     private final JdbcTemplate db;
 
     @Override
-    public List<Author> getFollowers(long authorId) {
+    public List<AuthorResponse> getFollowers(long authorId) {
         try {
             
             return db.query(
@@ -35,7 +34,7 @@ public class GetFollowersAuthorsAdapter implements GetFollowersAuthorsPort {
                     JOIN users u
                     ON (a.user_id = u.id)
                     """,
-                    (result, rowNum) -> new Author(
+                    (result, rowNum) -> new AuthorResponse(
                             result.getLong("follower"),
                             result.getString("username"),
                             result.getString("first_name"),
@@ -47,7 +46,7 @@ public class GetFollowersAuthorsAdapter implements GetFollowersAuthorsPort {
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 }

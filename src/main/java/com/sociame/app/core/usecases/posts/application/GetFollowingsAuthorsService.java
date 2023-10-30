@@ -2,7 +2,7 @@ package com.sociame.app.core.usecases.posts.application;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.GetFollowingsAuthorsUseCase;
 import com.sociame.app.core.usecases.posts.application.ports.out.GetFollowingsAuthorsPort;
-import com.sociame.app.core.usecases.posts.domain.Author;
+import com.sociame.app.core.usecases.posts.domain.responses.AuthorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class GetFollowingsAuthorsService implements GetFollowingsAuthorsUseCase 
     private final GetFollowingsAuthorsPort port;
 
     @Override
-    public List<Author> getFollowings(long authorId) {
+    public List<AuthorResponse> getFollowings(long authorId) {
         return port.getFollowings(authorId);
     }
 
