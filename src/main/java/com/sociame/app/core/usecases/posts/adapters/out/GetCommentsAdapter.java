@@ -70,7 +70,7 @@ public class GetCommentsAdapter implements GetCommentsPort {
             );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
