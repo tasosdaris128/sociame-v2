@@ -117,6 +117,34 @@ public class ErrorController extends ResponseEntityExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(response);
     }
+
+    @ExceptionHandler(value = {KnownRuntimeError.class})
+    protected ResponseEntity<ProblemDetail> handleRuntimeExceptionWithCustomResponse(
+        KnownRuntimeError error,
+        WebRequest request,
+        Authentication authentication
+    ) {
+        ProblemDetail response = getStandardResponse(
+                error,
+                request,
+                fromKnownErrorType(error.errorType()),
+                error.getMessage(),
+                null
+        );
+
+        log.info(
+                "ErrorController - Know Exception\n\tUser: {}\n\tRequest: {}\n\tResponse: {}",
+                userIdFromAuthentication(authentication),
+                request,
+                response,
+                error
+        );
+
+        return ResponseEntity.status(fromKnownErrorType(error.errorType()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(response);
+    }
+
     private ProblemDetail getStandardResponse(
             Exception exception,
             WebRequest request,
@@ -152,6 +180,20 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 
     private String userIdFromAuthentication(Authentication authentication) {
         return (authentication != null) ? authentication.getName() : "";
+    }
+
+    HttpStatus fromKnownErrorType(KnownRuntimeError.ErrorType errorType) {
+        switch (errorType) {
+            case NOT_FOUND -> {
+                return HttpStatus.NOT_FOUND;
+            }
+            case BAD_REQUEST -> {
+                return HttpStatus.BAD_REQUEST;
+            }
+            default -> {
+                return HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+        }
     }
 
 }
