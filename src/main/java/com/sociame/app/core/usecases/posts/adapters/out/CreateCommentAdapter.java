@@ -13,6 +13,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 @Slf4j
 @Component
@@ -29,7 +30,8 @@ public class CreateCommentAdapter implements CreateCommentPort {
 
             int affectedRows = db.update(connection -> {
                 PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO comment (body, post_id, author_id) VALUES (?, ?, ?)"
+                        "INSERT INTO comment (body, post_id, author_id) VALUES (?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
                 );
 
                 statement.setString(1, body);
