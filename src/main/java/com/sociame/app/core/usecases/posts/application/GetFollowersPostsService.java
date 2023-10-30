@@ -29,25 +29,25 @@ public class GetFollowersPostsService implements GetFollowersPostsUseCase {
     private final GetFollowersAuthorsPort followersPort;
 
     @Override
-    public Optional<GetFollowersPostsResponse> handleCommand(GetFollowersPostsCommand command) {
+    public GetFollowersPostsResponse handleCommand(GetFollowersPostsCommand command) {
         List<Post> posts = new ArrayList<>();
 
         Optional<Author> optionalAuthor = authorPort.getCurrentAuthor(command.username());
 
-        if (optionalAuthor.isEmpty()) return Optional.of(new GetFollowersPostsResponse(new ArrayList<>()));
+        if (optionalAuthor.isEmpty()) throw new RuntimeException("Unable to retrieve current author.");
 
         Author currentAuthor = optionalAuthor.get();
 
         List<Author> followers = followersPort.getFollowers(currentAuthor.id());
 
-        if (followers.isEmpty()) return Optional.of(new GetFollowersPostsResponse(new ArrayList<>()));
+        if (followers.isEmpty()) return new GetFollowersPostsResponse(new ArrayList<>());
 
         followers.forEach(e -> {
             List<Post> authorPosts = postPort.getAuthorPosts(e);
             if (!authorPosts.isEmpty()) posts.addAll(authorPosts);
         });
 
-        return Optional.of(new GetFollowersPostsResponse(posts.stream().map(PostResponse::map).toList()));
+        return new GetFollowersPostsResponse(posts.stream().map(PostResponse::map).toList());
     }
 
 }
