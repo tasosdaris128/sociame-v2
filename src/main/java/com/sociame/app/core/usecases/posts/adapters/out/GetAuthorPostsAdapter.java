@@ -32,9 +32,9 @@ public class GetAuthorPostsAdapter implements GetAuthorPostsPort {
                         body,
                         author_id
                     FROM post
-                    WHERE author_id = ?
+                    WHERE author_id = ? LIMIT 100
                     """,
-                    (result, rownNumber) -> new Post(
+                    (result, rowNumber) -> new Post(
                             new PostId(result.getLong("id")),
                             result.getString("title"),
                             result.getString("body"),
@@ -45,7 +45,7 @@ public class GetAuthorPostsAdapter implements GetAuthorPostsPort {
             );
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

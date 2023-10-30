@@ -1,8 +1,8 @@
 package com.sociame.app.core.usecases.posts.application;
 
 import com.sociame.app.core.usecases.posts.application.ports.in.GetOwnPostsUseCase;
-import com.sociame.app.core.usecases.posts.application.ports.out.GetCurrentAuthorPort;
 import com.sociame.app.core.usecases.posts.application.ports.out.GetAuthorPostsPort;
+import com.sociame.app.core.usecases.posts.application.ports.out.GetCurrentAuthorPort;
 import com.sociame.app.core.usecases.posts.domain.Author;
 import com.sociame.app.core.usecases.posts.domain.GetOwnPostsCommand;
 import com.sociame.app.core.usecases.posts.domain.Post;
@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,20 +26,20 @@ public class GetOwnPostsService implements GetOwnPostsUseCase {
     private final GetCurrentAuthorPort authorPort;
 
     @Override
-    public Optional<GetAuthorPostsResponse> handleCommand(GetOwnPostsCommand command) {
+    public GetAuthorPostsResponse handleCommand(GetOwnPostsCommand command) {
         Optional<Author> optionalAuthor = authorPort.getCurrentAuthor(command.username());
 
-        if (optionalAuthor.isEmpty()) return Optional.empty();
+        if (optionalAuthor.isEmpty()) throw new RuntimeException("Unable to retrieve current author.");
 
         Author author = optionalAuthor.get();
 
         List<Post> post = postPort.getAuthorPosts(author);
 
-        if (post.isEmpty()) return Optional.empty();
+        if (post.isEmpty()) return new GetAuthorPostsResponse(new ArrayList<>());
 
         List<PostResponse> postResponses = post.stream().map(PostResponse::map).toList();
 
-        return Optional.of(new GetAuthorPostsResponse(postResponses));
+        return new GetAuthorPostsResponse(postResponses);
     }
 
 }

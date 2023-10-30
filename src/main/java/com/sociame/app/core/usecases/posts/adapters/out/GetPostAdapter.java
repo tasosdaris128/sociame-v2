@@ -68,7 +68,7 @@ public class GetPostAdapter implements GetPostPort {
                                     post_id,
                                     author_id
                                 FROM comment
-                                WHERE post_id = ?
+                                WHERE post_id = ? LIMIT 100
                                 """,
                                 (r,  rowNum) -> {
                                     long commentAuthorId = r.getLong("author_id");
@@ -119,7 +119,7 @@ public class GetPostAdapter implements GetPostPort {
             return Optional.ofNullable(post);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return Optional.empty();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface GetOwnPostsUseCase {
 
-    Optional<GetAuthorPostsResponse> handleCommand(GetOwnPostsCommand command);
+    GetAuthorPostsResponse handleCommand(GetOwnPostsCommand command);
 
 }
