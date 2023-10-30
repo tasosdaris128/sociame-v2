@@ -49,7 +49,7 @@ public class GetFollowingsAuthorsAdapter implements GetFollowingsAuthorsPort {
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return new ArrayList<>();
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
