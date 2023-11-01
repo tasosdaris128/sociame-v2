@@ -9,3 +9,7 @@ clean:
 	clear
 	mvn clean
 	clear
+
+test:
+	clear
+	mvn test
