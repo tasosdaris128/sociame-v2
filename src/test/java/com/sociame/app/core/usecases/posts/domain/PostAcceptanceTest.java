@@ -4,11 +4,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PostAcceptanceTest {
 
@@ -85,6 +84,22 @@ public class PostAcceptanceTest {
         ), authorPremiumPlan);
 
         assertNotNull(newComment, "An author with premium plan can comment more than five times");
+    }
+
+    @DisplayName("A free account cannot create a post with more than 3000 characters.")
+    @Test
+    void freePlanCannotCreatePostWithMoreThan1000Characters() {
+        Post post = Post.createPost("Title", "A".repeat(2000), authorFreePlan);
+
+        assertEquals(1000, post.getBody().length(), "");
+    }
+
+    @DisplayName("A premium account cannot create a post with more than 5000 characters.")
+    @Test
+    void premiumPlanCannotCreatePostWithMoreThan3000Characters() {
+        Post post = Post.createPost("Title", "A".repeat(4000), authorPremiumPlan);
+
+        assertEquals(3000, post.getBody().length(), "");
     }
 
 }

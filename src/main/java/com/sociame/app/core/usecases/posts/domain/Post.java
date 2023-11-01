@@ -25,12 +25,12 @@ public class Post {
             if (body.length() <= 1000) break truncateBodyBasedOnPlan;
 
             if (poster.isFree()) {
-                refinedBody = body.substring(0, 999);
+                refinedBody = body.substring(0, 1000);
                 break truncateBodyBasedOnPlan;
             }
 
             if (body.length() > 3000) {
-                refinedBody = body.substring(0, 2999);
+                refinedBody = body.substring(0, 3000);
             }
         }
 
