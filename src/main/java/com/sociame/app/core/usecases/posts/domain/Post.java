@@ -51,7 +51,7 @@ public class Post {
                     .filter(e -> e.author().id().equals(commenter.id()))
                     .count();
 
-            if (existingCommentsOfAuthor <= 5) break createCommentBasedOnPlan;
+            if (existingCommentsOfAuthor < 5) break createCommentBasedOnPlan;
 
             if (commenter.isFree()) return null;
         }
