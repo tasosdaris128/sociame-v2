@@ -1,4 +1,4 @@
-package com.sociame.app.core.usecases.posts.domain;
+package com.sociame.app.core.usecases.accounts.domain;
 
 import com.sociame.app.core.usecases.accounts.domain.Account;
 import com.sociame.app.core.usecases.accounts.domain.AccountId;
