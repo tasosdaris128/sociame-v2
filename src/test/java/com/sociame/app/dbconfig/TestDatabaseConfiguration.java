@@ -16,7 +16,7 @@ public class TestDatabaseConfiguration {
         return new PostgreSQLContainer<>("postgres:13.10-alpine")
                 .withUrlParam("TC_TMPFS", "/testtmpfs:rw")
                 .withDatabaseName("sociame-test")
-                .withUsername("postgres")
+                .withUsername("user")
                 .withPassword("postgres");
     }
 

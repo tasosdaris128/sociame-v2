@@ -1,0 +1,8 @@
+spring:
+  flyway:
+    enabled: true
+    default-schema: "public"
+    locations: "classpath:db"
+    fail-on-missing-locations: true
+    schemas:
+      - "public"

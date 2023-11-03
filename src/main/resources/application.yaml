@@ -34,6 +34,20 @@ options:
   db:
     secret: "${DB_SALT}"
 spring:
+  profiles:
+    group:
+      local:
+      it:
+      dev:
+      production:
+    active: ${SPRING_PROFILE:local, local-db}
+  flyway:
+    enabled: false
+    default-schema: "public"
+    locations: "classpath:db"
+    fail-on-missing-locations: true
+    schemas:
+      - "public"
   datasource:
     url: "jdbc:postgresql://${PGHOST}:${PGPORT}/${PGCTL}?reWriteBatchedInserts=true"
     username: "${PGUSR}"
