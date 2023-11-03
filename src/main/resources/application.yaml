@@ -44,7 +44,7 @@ spring:
   flyway:
     enabled: false
     default-schema: "public"
-    locations: "classpath:db"
+    locations: "classpath:db/migration"
     fail-on-missing-locations: true
     schemas:
       - "public"

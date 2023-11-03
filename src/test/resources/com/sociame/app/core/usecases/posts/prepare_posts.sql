@@ -1,0 +1,2 @@
+insert into public.users(username, password, authorities, created_at, enabled, expired, locked, credentials_expired)
+VALUES ('manos', '$2a$10$fsD9VR/Zn0voWu.zgfRaLOopJaYXkwhaVm90SfxfGuaGsVRR7LAbq', array['authority_1', 'role_admin'], '2023-01-01 11:59:59.000', true, false, false, false);

@@ -12,4 +12,5 @@ clean:
 
 test:
 	clear
+	mvn clean
 	mvn test

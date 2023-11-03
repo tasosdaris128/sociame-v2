@@ -2,7 +2,8 @@ spring:
   flyway:
     enabled: true
     default-schema: "public"
-    locations: "classpath:db"
+    locations: "classpath:db/migration"
     fail-on-missing-locations: true
+    validateMigrationNaming: true
     schemas:
       - "public"
