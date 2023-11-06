@@ -28,7 +28,7 @@ public class CreateCommentAdapter implements CreateCommentPort {
 
             int affectedRows = db.update(connection -> {
                 PreparedStatement statement = connection.prepareStatement(
-                        "INSERT INTO comment (body, post_id, author_id) VALUES (?, ?, ?)",
+                        "INSERT INTO comment (body, post_id, author_id) VALUES (?, ?, ?) RETURNING id",
                         Statement.RETURN_GENERATED_KEYS
                 );
 
@@ -41,11 +41,11 @@ public class CreateCommentAdapter implements CreateCommentPort {
 
             if (affectedRows < 1) throw new RuntimeException("Unable to insert comment into DB.");
 
-            Long commentId = (Long) keyHolder.getKey();
+            Integer commentId = (Integer) keyHolder.getKey();
 
             if (commentId == null) throw new RuntimeException("Unable to retrieve the ID of the comment.");
 
-            return new CreateCommentResponse(commentId);
+            return new CreateCommentResponse(commentId.longValue());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw  new RuntimeException(e.getMessage());
