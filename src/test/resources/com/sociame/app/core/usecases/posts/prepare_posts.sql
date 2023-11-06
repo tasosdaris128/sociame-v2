@@ -10,7 +10,7 @@ INSERT INTO public.users(
 )
 VALUES (
     'freeplan@example.com',
-    '$2a$10$fsD9VR/Zn0voWu.zgfRaLOopJaYXkwhaVm90SfxfGuaGsVRR7LAbq',
+    '$2a$10$AMtR8sqTZmRgjOgLkAJxbeMITWkxEf307.rehthj9z9oswPxUloUS',
     array[''],
     '2023-01-01 11:59:59.000',
     true,
@@ -48,7 +48,7 @@ INSERT INTO public.users(
 )
 VALUES (
     'premiumplan@example.com',
-    '$2a$10$fsD9VR/Zn0voWu.zgfRaLOopJaYXkwhaVm90SfxfGuaGsVRR7LAbq',
+    '$2a$10$AMtR8sqTZmRgjOgLkAJxbeMITWkxEf307.rehthj9z9oswPxUloUS',
     array[''],
     '2023-01-01 11:59:59.000',
     true,
