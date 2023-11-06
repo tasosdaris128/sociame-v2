@@ -56,8 +56,6 @@ public class Post {
             if (commenter.isFree()) return null;
         }
 
-        this.comments.add(newComment);
-
         return newComment;
     }
 
