@@ -1,12 +1,10 @@
 package com.sociame.app.core.usecases.accounts.domain;
 
-import com.sociame.app.core.usecases.accounts.domain.Account;
-import com.sociame.app.core.usecases.accounts.domain.AccountId;
-import com.sociame.app.core.usecases.accounts.domain.UserId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AccountAcceptanceTest {
 
